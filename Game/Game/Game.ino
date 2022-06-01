@@ -62,6 +62,9 @@ const Scene game[2] PROGMEM = {
   next_scene
 };
 
+// Current Paused
+int paused = 0;
+
 // Inputs
 int clicked = 0;
 int selection = 0; // 0 = Do nothing, 1 == Left, 2 == Right, 3 == Down, 4 == Up
@@ -93,84 +96,90 @@ void setup() {
 }
 
 void loop() {
-  click_btn();
+  // Check if paused
+  if(paused){
+    printPaused();
+  }
+  else{
+     click_btn();
 
-  // Check if joystick has been clicked
-  if(clicked){
-    if(choice_i != -1){ // If selecting choices
-      scene_i = choices[choice_i].next_scene;
-      choice_i = -1;
-      readMsgsLen();
-      readMsg();
-      printMsg();
-    }
-    else{ // If reading messages
-      readMsgsLen();
-      if(msg_i >= msgs_len){ // All messages have bene read now read choices
-        msg_i = 0;
-        choice_i = 0;
-        readChoices();
-        printChoices();
-      }
-      else{ // Read next message
+    // Check if joystick has been clicked
+    if(clicked){
+      if(choice_i != -1){ // If selecting choices
+        scene_i = choices[choice_i].next_scene;
+        choice_i = -1;
+        readMsgsLen();
         readMsg();
         printMsg();
       }
+      else{ // If reading messages
+        readMsgsLen();
+        if(msg_i >= msgs_len){ // All messages have bene read now read choices
+          msg_i = 0;
+          choice_i = 0;
+          readChoices();
+          printChoices();
+        }
+        else{ // Read next message
+          readMsg();
+          printMsg();
+        }
+      }
+    }
+  
+    // If selecting choices let user use joystick to choose choices
+    if(choice_i != -1){
+      select_choice();
+      switch(selection){
+        case 0:
+          break;
+        case 1:
+          if(choice_i == 1){
+            choice_i--;
+            printChoices();
+          }
+          else if(choice_i == 3){
+            choice_i--;
+            printChoices();
+          }
+          break;
+        case 2:
+          if(choice_i == 0 && choices_len > 1){
+            choice_i++;
+            printChoices();
+          }
+          else if(choice_i == 2 && choices_len > 3){
+            choice_i++;
+            printChoices();
+          }
+          break;
+        case 3:
+          if(choice_i == 0 && choices_len > 2){
+            choice_i += 2;
+            printChoices();
+          }
+          else if(choice_i == 1 && choices_len > 3){
+            choice_i += 2;
+            printChoices();
+          }
+          break;
+        case 4:
+          if(choice_i == 2){
+            choice_i -= 2;
+            printChoices();
+          }
+          else if(choice_i == 3){
+            choice_i -= 2;
+            printChoices();
+          }
+          break;
+        default:
+          Serial.println(selection);
+          break;
+      }
     }
   }
-
-  // If selecting choices let user use joystick to choose choices
-  if(choice_i != -1){
-    select_choice();
-    switch(selection){
-      case 0:
-        break;
-      case 1:
-        if(choice_i == 1){
-          choice_i--;
-          printChoices();
-        }
-        else if(choice_i == 3){
-          choice_i--;
-          printChoices();
-        }
-        break;
-      case 2:
-        if(choice_i == 0 && choices_len > 1){
-          choice_i++;
-          printChoices();
-        }
-        else if(choice_i == 2 && choices_len > 3){
-          choice_i++;
-          printChoices();
-        }
-        break;
-      case 3:
-        if(choice_i == 0 && choices_len > 2){
-          choice_i += 2;
-          printChoices();
-        }
-        else if(choice_i == 1 && choices_len > 3){
-          choice_i += 2;
-          printChoices();
-        }
-        break;
-      case 4:
-        if(choice_i == 2){
-          choice_i -= 2;
-          printChoices();
-        }
-        else if(choice_i == 3){
-          choice_i -= 2;
-          printChoices();
-        }
-        break;
-      default:
-        Serial.println(selection);
-        break;
-    }
-  }
-
+  
   // Allow for delay to account for button debouncing
   delay(150);
 }
@@ -189,6 +198,12 @@ void readChoicesLen(){
 void readMsg(){
   memcpy_P(&curr_msg, &game[scene_i].msgs[msg_i], sizeof(curr_msg));
   msg_i++;
+}
+
+// Print the pause screen
+void printPaused(){
+  lcd.clear();
+  lcd.print("     PAUSED     ");
 }
 
 // Print the current message
