@@ -1,13 +1,54 @@
-Welcome Scene:
-- Msgs:
-  - Hello World!
-- Choices:
-  1) Start Game
-  2) Return
+0 Welcome Scene:
+  - Msgs:
+    - Hello World!
+  - Choices:
+    1) Start Game | 1
+    2) Return | 0
 
-Starting Scene:
-- Msgs:
-  - It's the start of a new day.
-  - You slowly open your eyes as you
-  - begin to wake up.
-  - What do you do?
+1 Starting Scene:
+  - Msgs:
+    - It's the start of a new day.
+    - You slowly open your eyes as you
+    - begin to wake up.
+  - Choices:
+    1) Sit up and stretch | 2
+    2) Go back to sleep | 3
+    3) Roll over to grab phone | 4
+
+2 Stretch Scene:
+  - Msgs:
+    - Slowly you begin to sit up.
+    - You raise your hands up and
+    - stretch out your limbs.
+    - Suddenly your muscles cramp up.
+  - Choices:
+    - You start spazzing and pass out. | Game Over
+
+3 Sleep Scene:
+  - Msgs:
+    - You close your eyes and try to
+    - fall asleep. Suddenly your alarm
+    - begins to ring. Annoyed you grab
+    - your phone and turn it off.
+    - You sit up now somewhat awake.
+  - Choices:
+    1) Wash up and brush your teeth | 
+    2) Head downstairs for breakfast |
+    3) Jump out the window | 
+    4) Go back to sleep again |
+
+4 Phone Scene:
+  - Msgs:
+    - You roll over and grab your
+    - phone. You see your alarm about
+    - to ring so you turn it off. Few
+    - minutes of scrolling later you
+    - actually get up for the day.
+  - Choices:
+
+
+GameOver Scene:
+  - Msgs:
+    - Game Over
+  - Choices:
+    - Restart?

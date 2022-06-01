@@ -23,6 +23,9 @@ struct Choice{
 #define MAX_MSGS 5
 #define MAX_CHOICES 4
 
+// Game Over Scene Number
+#define GAME_OVER_SCENE 10
+
 // Scene struct
 struct Scene{
   int msgs_len;
@@ -84,6 +87,9 @@ Choice curr_choice;
 int choice_i = -1;
 int choices_len;
 
+// On What Do You Do
+int wdyd = 0;
+
 void setup() {
   Serial.begin(9600);
   // Set up the LCD's number of columns and rows:
@@ -109,19 +115,33 @@ void loop() {
     // Check if joystick has been clicked
     if(clicked){
       if(choice_i != -1){ // If selecting choices
-        scene_i = curr_choice.next_scene;
-        choice_i = -1;
-        readMsgsLen();
-        readMsg();
-        printMsg();
+        if(wdyd){
+          readChoicesLen();
+          readChoice();
+          printChoice();
+          wdyd = 0;
+        }
+        else{
+          scene_i = curr_choice.next_scene;
+          choice_i = -1;
+          readMsgsLen();
+          readMsg();
+          printMsg();
+        }
       }
       else{ // If reading messages
         if(msg_i >= msgs_len){ // All messages have bene read now read choices
           msg_i = 0;
           choice_i = 0;
-          readChoicesLen();
-          readChoice();
-          printChoice();
+          if(scene_i != 0 || scene_i != GAME_OVER_SCENE){
+            wdyd = 1;
+            printWhatDoYouDo();
+          }
+          else{
+            readChoicesLen();
+            readChoice();
+            printChoice();
+          }
         }
         else{ // Read next message
           readMsg();
@@ -195,6 +215,12 @@ void printMsg(){
   lcd.print(curr_msg.msg[0]);
   lcd.setCursor(0, 1);
   lcd.print(curr_msg.msg[1]);
+}
+
+// Print "What do you do?" message before choices
+void printWhatDoYouDo(){
+  lcd.clear();
+  lcd.print("What do you do?");
 }
 
 // Print the current choices
