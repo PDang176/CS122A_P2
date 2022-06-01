@@ -36,7 +36,7 @@ const Scene welcome_scene = {
   .msgs_len = 1, 
   .choices_len = 2, 
   .msgs = {
-    {"Hello", "World!"}
+    {"     Hello     ", "     World!     "}
   }, 
   .choices = {
     {"Play", 1},
