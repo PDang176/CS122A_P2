@@ -15,7 +15,7 @@ struct Message{
 
 // Choice struct
 struct Choice{
-  char choice[7];
+  char choice[2][16];
   int next_scene;
 };
 
@@ -39,8 +39,8 @@ const Scene welcome_scene = {
     {"     Hello     ", "     World!     "}
   }, 
   .choices = {
-    {"Play", 1},
-    {"Exit", 0}
+    {"Start Game", 1},
+    {"Return", 0}
   }
 };
 
@@ -67,7 +67,7 @@ int paused = 0;
 
 // Inputs
 int clicked = 0;
-int selection = 0; // 0 = Do nothing, 1 == Left, 2 == Right, 3 == Down, 4 == Up
+int selection = 0; // 0 = Do nothing, 1 == Down, 2 == Up
 
 // Current Scene
 int scene_i = 0;
@@ -78,7 +78,7 @@ int msg_i = 0;
 int msgs_len;
 
 // Current Choices
-Choice choices[MAX_CHOICES];
+Choice curr_choice;
 int choice_i = -1;
 int choices_len;
 
@@ -91,6 +91,7 @@ void setup() {
   pinMode(SW_pin, INPUT_PULLUP);
   
   // Print a message to the LCD.
+  readMsgsLen();
   readMsg();
   printMsg();
 }
@@ -113,12 +114,12 @@ void loop() {
         printMsg();
       }
       else{ // If reading messages
-        readMsgsLen();
         if(msg_i >= msgs_len){ // All messages have bene read now read choices
           msg_i = 0;
           choice_i = 0;
-          readChoices();
-          printChoices();
+          readChoicesLen();
+          readChoice();
+          printChoice();
         }
         else{ // Read next message
           readMsg();
@@ -134,44 +135,10 @@ void loop() {
         case 0:
           break;
         case 1:
-          if(choice_i == 1){
-            choice_i--;
-            printChoices();
-          }
-          else if(choice_i == 3){
-            choice_i--;
-            printChoices();
-          }
+          
           break;
         case 2:
-          if(choice_i == 0 && choices_len > 1){
-            choice_i++;
-            printChoices();
-          }
-          else if(choice_i == 2 && choices_len > 3){
-            choice_i++;
-            printChoices();
-          }
-          break;
-        case 3:
-          if(choice_i == 0 && choices_len > 2){
-            choice_i += 2;
-            printChoices();
-          }
-          else if(choice_i == 1 && choices_len > 3){
-            choice_i += 2;
-            printChoices();
-          }
-          break;
-        case 4:
-          if(choice_i == 2){
-            choice_i -= 2;
-            printChoices();
-          }
-          else if(choice_i == 3){
-            choice_i -= 2;
-            printChoices();
-          }
+          
           break;
         default:
           Serial.println(selection);
@@ -215,73 +182,16 @@ void printMsg(){
 }
 
 // Print the current choices
-void readChoices(){
-  readChoicesLen();
-  for(int i = 0; i < choices_len; i++){
-    memcpy_P(&choices[i], &game[scene_i].choices[i], sizeof(choices[i]));
-  }
-}
-
-// Print the current choice indicator indicated by a ">"
-void printChoiceIndicator(){
-  switch(choice_i){
-    case 0:
-      lcd.setCursor(0,0);
-      lcd.print(">");
-      break;
-    case 1:
-      lcd.setCursor(8,0);
-      lcd.print(">");
-      break;
-    case 2:
-      lcd.setCursor(0,1);
-      lcd.print(">");
-      break;
-    case 3:
-      lcd.setCursor(8,1);
-      lcd.print(">");
-      break;
-    default:
-      Serial.println(choice_i);
-      break;
-  }
+void readChoice(){
+  memcpy_P(&curr_choice, &game[scene_i].choices[choice_i], sizeof(curr_choice));
 }
 
 // Print all the current choices
-void printChoices(){
-  int tmp = 0;
+void printChoice(){
   lcd.clear();
-
-  // Print the Arrow that denotes current choice
-  printChoiceIndicator();
-  
-  // 1st Choice
-  lcd.setCursor(1, 0);
-  lcd.print(choices[0].choice);
-  tmp++;
-  if(choices_len == tmp){
-    return;
-  }
-
-  // 2nd Choice
-  lcd.setCursor(9, 0);
-  lcd.print(choices[1].choice);
-  tmp++;
-  if(choices_len == tmp){
-    return;
-  }
-
-  // 3rd Choice
-  lcd.setCursor(1, 1);
-  lcd.print(choices[2].choice);
-  tmp++;
-  if(choices_len == tmp){
-    return;
-  }
-
-  // 4th Choice
-  lcd.setCursor(9, 1);
-  lcd.print(choices[3].choice);
+  lcd.print(curr_choice.choice[0]);
+  lcd.setCursor(0, 1);
+  lcd.print(curr_choice.choice[1]);
 }
 
 // Check if joystick has been clicked
@@ -291,17 +201,11 @@ void click_btn(){
 
 // Allow for joystick to select choices
 void select_choice(){
-  if(analogRead(X_pin) > 768){
+  if(analogRead(Y_pin) < 256){
     selection = 1;
   }
-  else if(analogRead(X_pin) < 256){
-    selection = 2;
-  }
-  else if(analogRead(Y_pin) < 256){
-    selection = 3;
-  }
   else if(analogRead(Y_pin) > 768){
-    selection = 4;
+    selection = 2;
   }
   else{
     selection = 0;
