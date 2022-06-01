@@ -2,8 +2,8 @@ Welcome Scene:
 - Msgs:
   - Hello World!
 - Choices:
-  -Play
-  -Exit
+  1) Start Game
+  2) Return
 
 Starting Scene:
 - Msgs:

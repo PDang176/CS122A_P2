@@ -39,20 +39,22 @@ const Scene welcome_scene = {
     {"     Hello     ", "     World!     "}
   }, 
   .choices = {
-    {"Start Game", 1},
-    {"Return", 0}
+    {{"1) Start Game", ""}, 1},
+    {{"2) Return", ""}, 0}
   }
 };
 
 const Scene next_scene = {
   .msgs_len = 2,
-  .choices_len = 1,
+  .choices_len = 3,
   .msgs = {
     {"Good Bye", "World"},
     {"Something", "Wight"}
   },
   .choices = {
-    {"Restart", 0}
+    {{"1) Restart", ""}, 0},
+    {{"2) Scene One", ""}, 1},
+    {{"3) Something", "Wong"}, 0}
   }
 };
 
@@ -107,7 +109,7 @@ void loop() {
     // Check if joystick has been clicked
     if(clicked){
       if(choice_i != -1){ // If selecting choices
-        scene_i = choices[choice_i].next_scene;
+        scene_i = curr_choice.next_scene;
         choice_i = -1;
         readMsgsLen();
         readMsg();
@@ -135,10 +137,24 @@ void loop() {
         case 0:
           break;
         case 1:
-          
+          if(choice_i >= choices_len - 1){
+            choice_i = 0;
+          }
+          else{
+            choice_i++;
+          }
+          readChoice();
+          printChoice();
           break;
         case 2:
-          
+          if(choice_i <= 0){
+            choice_i = choices_len - 1;
+          }
+          else{
+            choice_i--;
+          }
+          readChoice();
+          printChoice();
           break;
         default:
           Serial.println(selection);
