@@ -5,12 +5,16 @@
 LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 
 // Joystick Pins
-const int SW_pin = A0;
-const int X_pin = A1;
-const int Y_pin = A2;
+#define SW_pin A0
+#define X_pin A1
+#define Y_pin A2
+
+// Buttons
+#define Pause_pin 7
+#define Save_Restart_pin 6
 
 // Current Paused
-int paused = 0;
+bool paused = false;
 
 // Inputs
 bool clicked = false;
@@ -39,6 +43,10 @@ void setup() {
 
   // Set up joystick
   pinMode(SW_pin, INPUT_PULLUP);
+
+  // Set up buttons
+  pinMode(Pause_pin, INPUT_PULLUP);
+  pinMode(Save_Restart_pin, INPUT_PULLUP);
   
   // Print a message to the LCD.
   readMsgsLen();
@@ -48,14 +56,34 @@ void setup() {
 }
 
 void loop() {
-  // Check if paused
-  if(paused){
-    printPaused();
+  // Check button for pause toggle
+  if(scene_i != 0 && scene_i != GAME_OVER && scene_i != WIN && scene_i != CREDITS){
+    pause_btn();
   }
-  else{
-     click_btn();
 
-    // Check if joystick has been clicked
+  // Game is paused
+  if(paused){
+    if(sr_btn()){ // Check for restart button
+      paused = false;
+      scene_i = 0;
+      msg_i = 0;
+      choice_i = -1;
+      readMsgsLen();
+      readMsg();
+      printMsg();
+      checkwdyd();
+      Serial.println(scene_i);
+      Serial.println(choice_i);
+      Serial.println(curr_msg.msg[0]);
+      Serial.println(curr_msg.msg[1]);
+      Serial.println(msgs_len);
+    }
+  }
+  else{ // Game isn't paused
+    // Check for joystick click 
+    click_btn();
+
+    // Joystick has been clicked
     if(clicked){
       if(choice_i != -1){ // If selecting choices
         scene_i = curr_choice.next_scene;
@@ -87,12 +115,12 @@ void loop() {
     }
   
     // If selecting choices let user use joystick to choose choices
-    if(choice_i != -1 && !wdyd){
+    if(choice_i != -1){
       select_choice();
       switch(selection){
-        case 0:
+        case 0: // Do nothing
           break;
-        case 1:
+        case 1: // Scroll down
           if(choice_i >= choices_len - 1){
             choice_i = 0;
           }
@@ -102,7 +130,7 @@ void loop() {
           readChoice();
           printChoice();
           break;
-        case 2:
+        case 2: // Scroll up
           if(choice_i <= 0){
             choice_i = choices_len - 1;
           }
@@ -112,7 +140,7 @@ void loop() {
           readChoice();
           printChoice();
           break;
-        default:
+        default: // Error print selection
           Serial.println(selection);
           break;
       }
@@ -170,6 +198,34 @@ void printChoice(){
   lcd.print(curr_choice.choice[0]);
   lcd.setCursor(0, 1);
   lcd.print(curr_choice.choice[1]);
+}
+
+// Check if pause button has been clicked
+void pause_btn(){
+  if(digitalRead(Pause_pin) == LOW){
+    paused = !paused;
+    if(paused){ // Currently paused
+      printPaused();
+    }
+    else{ // Not paused
+      if(choice_i != -1){ // Print choice
+        printChoice();
+      }
+      else{
+        if(msg_i >= msgs_len){ // Print WDYD
+          printWhatDoYouDo();
+        }
+        else{ // Print message
+          printMsg();  
+        }
+      }
+    }
+  }
+}
+
+// Check if save/restart button has been clicked
+bool sr_btn(){
+  return (digitalRead(Save_Restart_pin) == LOW);
 }
 
 // Check if joystick has been clicked
