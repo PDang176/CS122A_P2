@@ -22,6 +22,10 @@ struct Choice {
 // Credits Sceen Number
 #define CREDITS 19
 
+const int notwdyd_scenes[] = {
+  0, GAME_OVER, WIN, CREDITS, 2, 6, 7, 8, 11, 15, 16
+};
+
 // Scene struct
 struct Scene {
   int msgs_len;
@@ -58,7 +62,7 @@ const Scene credits_scene = {
   .choices_len = 1,
   .msgs = {
     {"    Credits     ", ""},
-    {"     CS122A     ", "   Project 2    "}
+    {"     CS122A     ", "    Project 2    "}
   },
   .choices = {
     {{"    Made By     ", "  Patrick Dang  "}, 0}
@@ -67,7 +71,7 @@ const Scene credits_scene = {
 
 const Scene welcome_scene = {
   .msgs_len = 1,
-  .choices_len = 2,
+  .choices_len = 3,
   .msgs = {
     {"     Hello     ", "     World!     "}
   },

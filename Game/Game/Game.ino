@@ -13,7 +13,7 @@ const int Y_pin = A2;
 int paused = 0;
 
 // Inputs
-int clicked = 0;
+bool clicked = false;
 int selection = 0; // 0 = Do nothing, 1 == Down, 2 == Up
 
 // Current Scene
@@ -30,7 +30,7 @@ int choice_i = -1;
 int choices_len;
 
 // On What Do You Do
-int wdyd = 0;
+bool wdyd = false;
 
 void setup() {
   Serial.begin(9600);
@@ -44,6 +44,7 @@ void setup() {
   readMsgsLen();
   readMsg();
   printMsg();
+  checkwdyd();
 }
 
 void loop() {
@@ -57,29 +58,22 @@ void loop() {
     // Check if joystick has been clicked
     if(clicked){
       if(choice_i != -1){ // If selecting choices
-        if(wdyd){
-          readChoicesLen();
-          readChoice();
-          printChoice();
-          wdyd = 0;
-        }
-        else{
-          scene_i = curr_choice.next_scene;
-          choice_i = -1;
-          readMsgsLen();
-          readMsg();
-          printMsg();
-        }
+        scene_i = curr_choice.next_scene;
+        choice_i = -1;
+        readMsgsLen();
+        readMsg();
+        printMsg();
+        checkwdyd();
       }
       else{ // If reading messages
         if(msg_i >= msgs_len){ // All messages have bene read now read choices
-          msg_i = 0;
-          choice_i = 0;
-          if(scene_i != 0 && scene_i != GAME_OVER){
-            wdyd = 1;
+          if(wdyd){
+            wdyd = false;
             printWhatDoYouDo();
           }
           else{
+            msg_i = 0;
+            choice_i = 0;
             readChoicesLen();
             readChoice();
             printChoice();
@@ -180,7 +174,7 @@ void printChoice(){
 
 // Check if joystick has been clicked
 void click_btn(){
-  clicked = (digitalRead(SW_pin) == LOW) ? 1 : 0;
+  clicked = (digitalRead(SW_pin) == LOW) ? true : false;
 }
 
 // Allow for joystick to select choices
@@ -194,4 +188,15 @@ void select_choice(){
   else{
     selection = 0;
   }
+}
+
+void checkwdyd(){
+  for(int i = 0; i < sizeof(notwdyd_scenes) / sizeof(int); i++){
+    if(scene_i == notwdyd_scenes[i]){
+      wdyd = false;
+      return;
+    }
+  }
+  wdyd = true;
+  return;
 }
