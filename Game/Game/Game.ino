@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+#include <EEPROM.h>
 #include "scenes.h"
 
 // initialize the library with the numbers of the interface pins
@@ -11,7 +12,10 @@ LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 
 // Buttons
 #define Pause_pin 7
-#define Save_Restart_pin 6
+#define Multi_pin 6
+
+// EEPROM Address
+int eeAddress = 0;
 
 // Current Paused
 bool paused = false;
@@ -46,7 +50,7 @@ void setup() {
 
   // Set up buttons
   pinMode(Pause_pin, INPUT_PULLUP);
-  pinMode(Save_Restart_pin, INPUT_PULLUP);
+  pinMode(Multi_pin, INPUT_PULLUP);
   
   // Print a message to the LCD.
   readMsgsLen();
@@ -57,13 +61,18 @@ void setup() {
 
 void loop() {
   // Check button for pause toggle
-  if(scene_i != 0 && scene_i != GAME_OVER && scene_i != WIN && scene_i != CREDITS){
+  if(valid_scene()){
     pause_btn();
+  }
+
+  // Load save state
+  if(multi_btn() && scene_i == 0){
+    continue_scene();
   }
 
   // Game is paused
   if(paused){
-    if(sr_btn()){ // Check for restart button
+    if(multi_btn()){ // Check for restart button
       paused = false;
       scene_i = 0;
       msg_i = 0;
@@ -72,16 +81,15 @@ void loop() {
       readMsg();
       printMsg();
       checkwdyd();
-      Serial.println(scene_i);
-      Serial.println(choice_i);
-      Serial.println(curr_msg.msg[0]);
-      Serial.println(curr_msg.msg[1]);
-      Serial.println(msgs_len);
     }
   }
   else{ // Game isn't paused
     // Check for joystick click 
     click_btn();
+
+    if(multi_btn() && valid_scene()){ // Check for save button
+      save_scene();
+    }
 
     // Joystick has been clicked
     if(clicked){
@@ -94,10 +102,11 @@ void loop() {
         checkwdyd();
       }
       else{ // If reading messages
-        if(msg_i >= msgs_len){ // All messages have bene read now read choices
+        if(msg_i >= msgs_len - 1){ // All messages have bene read now read choices
           if(wdyd){
             wdyd = false;
             printWhatDoYouDo();
+            msg_i++;
           }
           else{
             msg_i = 0;
@@ -108,6 +117,7 @@ void loop() {
           }
         }
         else{ // Read next message
+          msg_i++;
           readMsg();
           printMsg();
         }
@@ -164,7 +174,6 @@ void readChoicesLen(){
 // Read the current message from progmem
 void readMsg(){
   memcpy_P(&curr_msg, &game[scene_i].msgs[msg_i], sizeof(curr_msg));
-  msg_i++;
 }
 
 // Print the pause screen
@@ -179,6 +188,72 @@ void printMsg(){
   lcd.print(curr_msg.msg[0]);
   lcd.setCursor(0, 1);
   lcd.print(curr_msg.msg[1]);
+}
+
+// Save the current scene
+void save_scene(){
+  // Print "Progress Saved" message
+  lcd.clear();
+  lcd.print(" Progress Saved ");
+
+  // Save to EEPROM
+  eeAddress = 0;
+  EEPROM.put(eeAddress, scene_i);
+  eeAddress += sizeof(int);
+  EEPROM.put(eeAddress, msg_i);
+  eeAddress += sizeof(int);
+  EEPROM.put(eeAddress, choice_i);
+  eeAddress += sizeof(int);
+  EEPROM.put(eeAddress, wdyd);
+  
+  delay(1000);
+  if(choice_i != -1){ // Print choice
+    printChoice();
+  }
+  else{
+    if(msg_i > msgs_len - 1){ // Print WDYD
+      printWhatDoYouDo();
+    }
+    else{ // Print message
+      printMsg();
+    }
+  }
+}
+
+// Continue from saved scene
+void continue_scene(){
+  // Print "Progress Continued" message
+  lcd.clear();
+  lcd.print("    Progress    ");
+  lcd.setCursor(0, 1);
+  lcd.print("    Continued   ");
+
+  // Retrieve scene from EEPROM
+  eeAddress = 0;
+  EEPROM.get(eeAddress, scene_i);
+  eeAddress += sizeof(int);
+  EEPROM.get(eeAddress, msg_i);
+  eeAddress += sizeof(int);
+  EEPROM.get(eeAddress, choice_i);
+  eeAddress += sizeof(int);
+  EEPROM.get(eeAddress, wdyd);
+
+  delay(1000);
+  if(choice_i != -1){ // Print choice
+    readChoicesLen();
+    readChoice();
+    printChoice();
+  }
+  else{
+    readMsgsLen();
+    if(msg_i > msgs_len - 1){ // Print WDYD
+      printWhatDoYouDo();
+    }
+    else{ // Print message
+      readMsg();
+      printMsg(); 
+    }
+  }
 }
 
 // Print "What do you do?" message before choices
@@ -212,7 +287,7 @@ void pause_btn(){
         printChoice();
       }
       else{
-        if(msg_i >= msgs_len){ // Print WDYD
+        if(msg_i > msgs_len - 1){ // Print WDYD
           printWhatDoYouDo();
         }
         else{ // Print message
@@ -223,9 +298,13 @@ void pause_btn(){
   }
 }
 
-// Check if save/restart button has been clicked
-bool sr_btn(){
-  return (digitalRead(Save_Restart_pin) == LOW);
+bool valid_scene(){
+  return (scene_i != 0 && scene_i != GAME_OVER && scene_i != WIN && scene_i != CREDITS);
+}
+
+// Check if multi button has been clicked
+bool multi_btn(){
+  return (digitalRead(Multi_pin) == LOW);
 }
 
 // Check if joystick has been clicked
