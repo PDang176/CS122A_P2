@@ -23,7 +23,7 @@ struct Choice {
 #define CREDITS 26
 
 const int notwdyd_scenes[] = {
-  0, GAME_OVER, WIN, CREDITS, 2, 6, 7, 8, 11, 15, 16
+  0, GAME_OVER, WIN, CREDITS, 2, 6, 7, 8, 11, 15, 16, 17, 21, 22, 23
 };
 
 // Scene struct
@@ -339,7 +339,7 @@ const Scene punch_scene = {
   .choices = {
     {{"escorts you off", "the premises."}, GAME_OVER}
   }
-}
+};
 
 const Scene passcoworker_scene = {
   .msgs_len = 5,
@@ -357,7 +357,7 @@ const Scene passcoworker_scene = {
     {{"3) Turn around", "and keep walking"}, 20},
     {{"4) Say no and", "walk away"}, 20}
   }
-}
+};
 
 const Scene goodmorning_scene = {
   .msgs_len = 5,
@@ -373,7 +373,7 @@ const Scene goodmorning_scene = {
     {{"1) Head to your", "cubicle"}, 21},
     {{"2) Jump out the", "window"}, 7}
   }
-}
+};
 
 const Scene passcoworker2_scene = {
   .msgs_len = 5,
@@ -391,7 +391,7 @@ const Scene passcoworker2_scene = {
     {{"3) Tell him it's", "cuz he's an ass"}, 22},
     {{"4) Sigh and say", "good morning"}, 19}
   }
-}
+};
 
 const Scene cubicle_scene = {
   .msgs_len = 5,
@@ -406,7 +406,7 @@ const Scene cubicle_scene = {
   .choices = {
     {{"  Hello World.  ", ""}, WIN}
   }
-}
+};
 
 const Scene passcoworker3_scene = {
   .msgs_len = 5,
@@ -421,7 +421,7 @@ const Scene passcoworker3_scene = {
   .choices = {
     {{"away. Everyone", "cheers as he's"}, 23}
   }
-}
+};
 
 const Scene passcoworker4_scene = {
   .msgs_len = 5,
@@ -436,7 +436,7 @@ const Scene passcoworker4_scene = {
   .choices = {
     {{"Victory is", "finally yours."}, WIN}
   }
-}
+};
 
 // Store all scenes into the game
 const Scene game[27] PROGMEM = {
