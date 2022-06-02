@@ -1,22 +1,22 @@
 0 Welcome Scene:
-  - Msgs:
+  - Msgs: 1
     - Hello World!
   - Choices:
     1) Start Game | 1
     2) Return | 0
 
 1 Starting Scene:
-  - Msgs:
-    - It's the start of a new day.
-    - You slowly open your eyes as you
-    - begin to wake up.
+  - Msgs: 3
+    - It's the start | of a new day.
+    - You slowly open | your eyes as you
+    - begin to tiredly | wake up.
   - Choices:
-    1) Sit up and stretch | 2
-    2) Go back to sleep | 3
-    3) Roll over to grab phone | 4
+    1) Sit up and | stretch | 2
+    2) Go back to | sleep | 3
+    3) Roll over to | grab phone | 4
 
 2 Stretch Scene:
-  - Msgs:
+  - Msgs: 4
     - Slowly you begin to sit up.
     - You raise your hands up and
     - stretch out your limbs.
@@ -25,30 +25,74 @@
     - You start spazzing and pass out. | Game Over
 
 3 Sleep Scene:
-  - Msgs:
+  - Msgs: 5
     - You close your eyes and try to
     - fall asleep. Suddenly your alarm
     - begins to ring. Annoyed you grab
     - your phone and turn it off.
     - You sit up now somewhat awake.
   - Choices:
-    1) Wash up and brush your teeth | 
-    2) Head downstairs for breakfast |
-    3) Jump out the window | 
-    4) Go back to sleep again |
+    1) Wash up and brush your teeth | 5
+    2) Head downstairs | 6
+    3) Jump out the window |  7
+    4) Go back to sleep again | 8
 
 4 Phone Scene:
-  - Msgs:
+  - Msgs: 5
     - You roll over and grab your
     - phone. You see your alarm about
     - to ring so you turn it off. Few
     - minutes of scrolling later you
     - actually get up for the day.
   - Choices:
+    1) Wash up and brush your teeth | 5
+    2) Head downstairs | 6
+    3) Jump out the window | 7
+    4) Go back to sleep again | 8
 
+5 Bathroom Scene:
+  - Msgs: 5
+    - You head to the bathroom to wash
+    - up. After brushing your teeth
+    - and washing your face you're now
+    - fully awake and ready to start
+    - the day.
+  - Choices:
+    1) Head downstairs | 9
+    2) Go back to sleep again | 8
+
+6 Downstairs Scene:
+  - Msgs: 4
+    - Tired and groggy you stumble to
+    - the stairs. You start walk down,
+    - but because of your tiredness
+    - you miss a step and go crashing
+  - Choices:
+    - down the stairs. | Game Over
+
+7 Window Scene:
+  - Msgs: 2
+    - You jump out the window and 
+    - perish. There was no reason to
+  - Choices:
+    - do this. Choose a better option. | Game Over
+
+8 Sleep2 Scene:
+  - Msgs: 4
+    - You're back lying down in bed
+    - and drift off to sleep. Later
+    - your phone rings. It's your boss
+    - calling. It's already 3 PM.
+  - Choices:
+    - You're fired. Don't oversleep. | Game Over
+
+9 Downstairs2 Scene:
+  - Msgs:
+    - 
+  - Choices
 
 GameOver Scene:
-  - Msgs:
+  - Msgs: 1
     - Game Over
   - Choices:
     - Restart?

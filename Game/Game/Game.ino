@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+#include "scenes.h"
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
@@ -7,65 +8,6 @@ LiquidCrystal lcd(8, 9, 10, 11, 12, 13);
 const int SW_pin = A0;
 const int X_pin = A1;
 const int Y_pin = A2;
-
-// Message struct
-struct Message{
-  char msg[2][16];
-};
-
-// Choice struct
-struct Choice{
-  char choice[2][16];
-  int next_scene;
-};
-
-// Max number of messages and choices per scene
-#define MAX_MSGS 5
-#define MAX_CHOICES 4
-
-// Game Over Scene Number
-#define GAME_OVER_SCENE 10
-
-// Scene struct
-struct Scene{
-  int msgs_len;
-  int choices_len;
-  Message msgs[MAX_MSGS];
-  Choice choices[MAX_CHOICES];
-};
-
-// All scenes are declared here
-const Scene welcome_scene = {
-  .msgs_len = 1, 
-  .choices_len = 2, 
-  .msgs = {
-    {"     Hello     ", "     World!     "}
-  }, 
-  .choices = {
-    {{"1) Start Game", ""}, 1},
-    {{"2) Return", ""}, 0}
-  }
-};
-
-const Scene next_scene = {
-  .msgs_len = 2,
-  .choices_len = 3,
-  .msgs = {
-    {"Good Bye", "World"},
-    {"Something", "Wight"}
-  },
-  .choices = {
-    {{"1) Restart", ""}, 0},
-    {{"2) Scene One", ""}, 1},
-    {{"3) Something", "Wong"}, 0}
-  }
-};
-
-// Store all scenes into the game
-const Scene game[2] PROGMEM = {
-  welcome_scene,
-  next_scene
-};
 
 // Current Paused
 int paused = 0;
@@ -133,7 +75,7 @@ void loop() {
         if(msg_i >= msgs_len){ // All messages have bene read now read choices
           msg_i = 0;
           choice_i = 0;
-          if(scene_i != 0 || scene_i != GAME_OVER_SCENE){
+          if(scene_i != 0 && scene_i != GAME_OVER_SCENE){
             wdyd = 1;
             printWhatDoYouDo();
           }
@@ -151,7 +93,7 @@ void loop() {
     }
   
     // If selecting choices let user use joystick to choose choices
-    if(choice_i != -1){
+    if(choice_i != -1 && !wdyd){
       select_choice();
       switch(selection){
         case 0:
