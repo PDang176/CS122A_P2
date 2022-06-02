@@ -16,6 +16,9 @@ struct Choice{
 // Game Over Scene Number
 #define GAME_OVER_SCENE 10
 
+// Credits Sceen Number
+#define CREDITS 10
+
 // Scene struct
 struct Scene{
   int msgs_len;
@@ -25,6 +28,40 @@ struct Scene{
 };
 
 // All scenes are declared here
+const Scene temp_scene = {
+  .msgs_len = , 
+  .choices_len = , 
+  .msgs = {
+    {, }
+  }, 
+  .choices = {
+    {{, }, }
+  }
+}
+
+const Scene gameover_scene = {
+  .msgs_len = 1, 
+  .choices_len = 1, 
+  .msgs = {
+    {"      Game      ", "      Over      "}
+  }, 
+  .choices = {
+    {{"1) Restart?"}, 0},
+  }
+}
+
+const Scene credits_scene = {
+  .msgs_len = 2, 
+  .choices_len = 1, 
+  .msgs = {
+    {"    Credits     ", ""},
+    {"     CS122A     ", "   Project 2    "}
+  }, 
+  .choices = {
+    {{"    Made By     ", "  Patrick Dang  "}, 0}
+  }
+}
+
 const Scene welcome_scene = {
   .msgs_len = 1, 
   .choices_len = 2, 
@@ -33,7 +70,8 @@ const Scene welcome_scene = {
   }, 
   .choices = {
     {{"1) Start Game", ""}, 1},
-    {{"2) Return", ""}, 0}
+    {{"2) Credits", ""}, CREDITS}
+    {{"3) Return", ""}, 0}
   }
 };
 
