@@ -75,7 +75,7 @@ void loop() {
         if(msg_i >= msgs_len){ // All messages have bene read now read choices
           msg_i = 0;
           choice_i = 0;
-          if(scene_i != 0 && scene_i != GAME_OVER_SCENE){
+          if(scene_i != 0 && scene_i != GAME_OVER){
             wdyd = 1;
             printWhatDoYouDo();
           }
