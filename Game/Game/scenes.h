@@ -14,13 +14,13 @@ struct Choice {
 #define MAX_CHOICES 4
 
 // Game Over Scene Number
-#define GAME_OVER 17
+#define GAME_OVER 24
 
 // Win Scene Number
-#define WIN 18
+#define WIN 25
 
 // Credits Sceen Number
-#define CREDITS 19
+#define CREDITS 26
 
 const int notwdyd_scenes[] = {
   0, GAME_OVER, WIN, CREDITS, 2, 6, 7, 8, 11, 15, 16
@@ -283,14 +283,21 @@ const Scene seleven_scene = {
 };
 
 const Scene headtowork2_scene = {
-//  .msgs_len = ,
-//  .choices_len = ,
-//  .msgs = {
-//    
-//  },
-//  .choices = {
-//    
-//  }
+  .msgs_len = 5,
+  .choices_len = 4,
+  .msgs = {
+    {"You continue on", "heading towards"},
+    {"work. Finally,", "you arrive right"},
+    {"on time. As you", "make your way to"},
+    {"inside you're", "suddenly stopped"},
+    {"by a much hated", "coworker."}
+  },
+  .choices = {
+    {{"1) Punch him in", "the face"}, 17},
+    {{"2) Walk right by", "him"}, 18},
+    {{"3) Tell him good", "morning"}, 19},
+    {{"4) Nod and", "continue walking"}, 18}
+  }
 };
 
 const Scene lottery_scene = {
@@ -319,19 +326,120 @@ const Scene lottery2_scene = {
   }
 };
 
-//const Scene temp_scene = {
-//  .msgs_len = ,
-//  .choices_len = ,
-//  .msgs = {
-//    
-//  },
-//  .choices = {
-//    
-//  }
-//}
+const Scene punch_scene = {
+  .msgs_len = 5,
+  .choices_len = 1,
+  .msgs = {
+    {"You wind up and", "get ready to"},
+    {"swing at him.", "POW! You land a"},
+    {"hit right in his", "face. Even if it"},
+    {"it was deserved", "you really can't"},
+    {"just be hitting", "people. Security"}
+  },
+  .choices = {
+    {{"escorts you off", "the premises."}, GAME_OVER}
+  }
+}
+
+const Scene passcoworker_scene = {
+  .msgs_len = 5,
+  .choices_len = 4,
+  .msgs = {
+    {"As you begin to", "walk by he calls"},
+    {"out your name.", "Of course it's"},
+    {"not that simple.", "You turn around"},
+    {"and to face him.", "He smirks and"},
+    {"asks \"No good", "morning?\""}
+  },
+  .choices = {
+    {{"1) Punch him in", "the face"}, 17},
+    {{"2) Tell him good", "morning"}, 19},
+    {{"3) Turn around", "and keep walking"}, 20},
+    {{"4) Say no and", "walk away"}, 20}
+  }
+}
+
+const Scene goodmorning_scene = {
+  .msgs_len = 5,
+  .choices_len = 2,
+  .msgs = {
+    {"You tell him", "good morning and"},
+    {"continue on your", "merry way. He"},
+    {"was a bit thrown", "back by this,"},
+    {"but let you go.", "You head inside"},
+    {"and up the", "stairs to work."}
+  },
+  .choices = {
+    {{"1) Head to your", "cubicle"}, 21},
+    {{"2) Jump out the", "window"}, 7}
+  }
+}
+
+const Scene passcoworker2_scene = {
+  .msgs_len = 5,
+  .choices_len = 4,
+  .msgs = {
+    {"You continue", "walking, but"},
+    {"suddenly a hand", "pulls you to a"},
+    {"stop. \"Hey! why", "are you being so"},
+    {"rude.\" You brush", "off his hand and"},
+    {"face him once", "again."}
+  },
+  .choices = {
+    {{"1) Punch him in", "the face"}, 17},
+    {{"2) Turn around", "and keep walking"}, 22},
+    {{"3) Tell him it's", "cuz he's an ass"}, 22},
+    {{"4) Sigh and say", "good morning"}, 19}
+  }
+}
+
+const Scene cubicle_scene = {
+  .msgs_len = 5,
+  .choices_len = 1,
+  .msgs = {
+    {"You arrive at", "your cubicle."},
+    {"Finally you", "begin to work."},
+    {"You pull out a", "laptop and open"},
+    {"up your favorite", "text editor."},
+    {"You're ready to", "start the day."},
+  },
+  .choices = {
+    {{"  Hello World.  ", ""}, WIN}
+  }
+}
+
+const Scene passcoworker3_scene = {
+  .msgs_len = 5,
+  .choices_len = 1,
+  .msgs = {
+    {"He begins to", "become enraged."},
+    {"Veins forming", "he starts to"},
+    {"clench his fist.", "POW! He smacks"},
+    {"you right in the", "face. Security"},
+    {"is called and he", "gets escorted"},
+  },
+  .choices = {
+    {{"away. Everyone", "cheers as he's"}, 23}
+  }
+}
+
+const Scene passcoworker4_scene = {
+  .msgs_len = 5,
+  .choices_len = 1,
+  .msgs = {
+    {"dragged away.", "Looks like you"},
+    {"weren't the only", "one who hated"},
+    {"him. You earn", "the respect of"},
+    {"everyone around.", "Bruised but"},
+    {"feeling elated", "you walk inside."},
+  },
+  .choices = {
+    {{"Victory is", "finally yours."}, WIN}
+  }
+}
 
 // Store all scenes into the game
-const Scene game[20] PROGMEM = {
+const Scene game[27] PROGMEM = {
   welcome_scene,
   starting_scene,
   stretch_scene,
@@ -349,6 +457,13 @@ const Scene game[20] PROGMEM = {
   headtowork2_scene,
   lottery_scene,
   lottery2_scene,
+  punch_scene,
+  passcoworker_scene,
+  goodmorning_scene,
+  passcoworker2_scene,
+  cubicle_scene,
+  passcoworker3_scene,
+  passcoworker4_scene,
   gameover_scene,
   win_scene,
   credits_scene

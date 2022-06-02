@@ -36,7 +36,7 @@
   - Choices:
     "1) Wash up and", "brush your teeth" | 5
     "2) Head", "downstairs" | 6
-    "3) Jump out the", "window" |  7
+    "3) Jump out the", "window" | 7
     "4) Go back to", "sleep again" | 8
 
 4 Phone Scene:
@@ -49,7 +49,7 @@
   - Choices:
     "1) Wash up and", "brush your teeth" | 5
     "2) Head", "downstairs" | 6
-    "3) Jump out the", "window" |  7
+    "3) Jump out the", "window" | 7
     "4) Go back to", "sleep again" | 8
 
 5 Bathroom Scene:
@@ -142,9 +142,17 @@
     "3) Buy nothing", "at all" | 14
 
 14 HeadToWork2 Scene:
-  - Msgs:
+  - Msgs: 5
     - "You continue on", "heading towards"
-    - "work. 
+    - "work. Finally,", "you arrive right"
+    - "on time. As you", "make your way to"
+    - "inside you're", "suddenly stopped"
+    - "by a much hated", "coworker."
+  - Choices:
+    "1) Punch him in", "the face" | 17
+    "2) Walk right by", "him" | 18
+    "3) Tell him good", "morning" | 19
+    "4) Nod and", "continue walking" | 18
 
 15 Lottery Scene:
   - Msgs: 5
@@ -161,6 +169,83 @@
     - "call your boss", "and quit right"
   - Choices:
     - "on the spot.", "You're rich!" | Win
+
+17 Punch Scene:
+  - Msgs: 5
+    - "You wind up and", "get ready to"
+    - "swing at him.", "POW! You land a"
+    - "hit right in his", "face. Even if it"
+    - "it was deserved", "you really can't"
+    - "just be hitting", "people. Security"
+  - Choices:
+    - "escorts you off", "the premises." | Game Over
+
+18 PassCoworker Scene:
+  - Msgs: 5
+    - "As you begin to", "walk by he calls"
+    - "out your name.", "Of course it's"
+    - "not that simple.", "You turn around"
+    - "and to face him.", "He smirks and"
+    - "asks \"No good", "morning?\""
+  - Choices:
+    "1) Punch him in", "the face" | 17
+    "2) Tell him good", "morning" | 19
+    "3) Turn around", "and keep walking" | 20
+    "4) Say no and", "walk away" | 20
+
+19 GoodMorning Scene:
+  - Msgs: 5
+    - "You tell him", "good morning and"
+    - "continue on your", "merry way. He"
+    - "was a bit thrown", "back by this,"
+    - "but let you go.", "You head inside"
+    - "and up the", "stairs to work."
+  - Choices:
+    "1) Head to your", "cubicle" | 21
+    "2) Jump out the", "window" | 7
+
+20 PassCoworker2 Scene:
+  - Msgs: 5
+    - "You continue", "walking, but"
+    - "suddenly a hand", "pulls you to a"
+    - "stop. \"Hey! why", "are you being so"
+    - "rude.\" You brush", "off his hand and"
+    - "face him once", "again."
+  - Choices:
+    "1) Punch him in", "the face" | 17
+    "2) Turn around", "and keep walking" | 22
+    "3) Tell him it's", "cuz he's an ass" | 22
+    "4) Sigh and say", "good morning" | 19
+
+21 Cubicle Scene:
+  - Msgs: 5
+    - "You arrive at", "your cubicle."
+    - "Finally you", "begin to work."
+    - "You pull out a", "laptop and open"
+    - "up your favorite", "text editor."
+    - "You're ready to", "start the day." 
+  - Choices:
+    - "  Hello World.  " | Win
+
+22 PassCoworker3 Scene:
+  - Msgs: 5
+    - "He begins to", "become enraged."
+    - "Veins forming", "he starts to"
+    - "clench his fist.", "POW! He smacks"
+    - "you right in the", "face. Security"
+    - "is called and he", "gets escorted"
+  - Choices:
+    - "away. Everyone", "cheers as he's" | 23
+
+23 PassCoworker4 Scene:
+  - Msgs: 5
+    - "dragged away.", "Looks like you"
+    - "weren't the only", "one who hated"
+    - "him. You earn", "the respect of"
+    - "everyone around.", "Bruised but"
+    - "feeling elated", "you walk inside."
+  - Choices:
+    - "Victory is", "finally yours." | Win
 
 GameOver Scene:
   - Msgs: 1
